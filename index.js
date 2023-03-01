@@ -26,7 +26,15 @@ async function run() {
         const commentCollection = client.db('Triptastic').collection('comment');
 
         app.get('/Place', async (req, res) => {
-            const query = {};
+            const search = req.query.search
+            let query = {};
+            if (search.length) {
+                query = {
+                    $text: {
+                        $search: search
+                    }
+                }
+            }
             const options = await PlaceCollection.find(query).toArray();
             res.send(options);
         });
